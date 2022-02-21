@@ -23,6 +23,8 @@ for player_color in players_list:
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
 
+lost_players = []
+
 def check_rotation(player_color):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -49,7 +51,10 @@ while running:
     check_rotation(my_player)
 
     for player_color in players_list:
-        reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
+        if player_color not in lost_players:
+            try:
+                reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
+            except:
+                lost_players.append(player_color)
         pygame.draw.lines(screen, player_color, False, players_dict[player_color].get_pos_list()[1:])
-
     pygame.display.update()
