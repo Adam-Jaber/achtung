@@ -27,10 +27,8 @@ def check_rotation(player_color):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         angle_dict[player_color] = -0.3
-        print('left')
     elif keys[pygame.K_RIGHT]:
         angle_dict[player_color] = 0.3
-        print('right')
     else:
         angle_dict[player_color] = 0
 
@@ -51,7 +49,7 @@ while running:
     check_rotation(my_player)
 
     for player_color in players_list:
-        reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color])
+        reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
         pygame.draw.lines(screen, player_color, False, players_dict[player_color].get_pos_list()[1:])
 
     pygame.display.update()
