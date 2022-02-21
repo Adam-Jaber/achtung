@@ -1,4 +1,5 @@
 import math
+import achtung_exceptions
 
 PLAYER_VEL = 0.2
 GAME_SIZE = (800, 600)
@@ -24,7 +25,7 @@ class Player:
         new_y = self.pos_list[-1][1] + new_slope * x_change
         new_pos = (new_x, new_y)
         if self.check_new_pos(new_pos, players) is False:
-            raise Exception
+            raise achtung_exceptions.CollisionError
         self.pos_list.append(new_pos)
         return reverse
 
@@ -32,7 +33,6 @@ class Player:
         for player in list(players):
             for i in range(1, len(player.pos_list) - 2):
                 if self.intersect(player.pos_list[i], player.pos_list[i+1], player.pos_list[-1], new_pos):
-                    print('col')
                     return False
         for axis in (0, 1):
             if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:

@@ -2,6 +2,7 @@ import pygame
 import random
 import _thread
 from player import Player
+import achtung_exceptions
 
 #get this dicts, player_list and your player from server
 reverse_dict = {(0,255,0): False}
@@ -54,7 +55,7 @@ while running:
         if player_color not in lost_players:
             try:
                 reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
-            except:
+            except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
         pygame.draw.lines(screen, player_color, False, players_dict[player_color].get_pos_list()[1:])
     pygame.display.update()
