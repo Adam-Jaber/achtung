@@ -1,6 +1,7 @@
 import math
 
 PLAYER_VEL = 0.1
+GAME_SIZE = (800, 600)
 
 class Player:
     def __init__(self, first_pos):
@@ -24,6 +25,15 @@ class Player:
         new_pos = (new_x, new_y)
         self.pos_list.append(new_pos)
         return reverse
+
+    def check_new_pos(self, new_pos, players_dict):
+        for player in players_dict:
+            if new_pos in player.pos_list:
+                return False
+        for axis in (0, 1):
+            if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:
+                return False
+        return True
 
     def get_pos_list(self):
         return  self.pos_list
