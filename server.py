@@ -34,7 +34,7 @@ class Degrees(Resource):
 
         args = parser.parse_args()
 
-        angle_dict[args['myplayer']] = args['angle']
+        angle_dict[args['myplayer']] = float(args['angle'])
 
         return json.dumps(angle_dict)
 
