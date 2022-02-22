@@ -7,7 +7,7 @@ import achtung_exceptions
 #get this dicts, player_list and your player from server
 reverse_dict = {(0,255,0): False}
 start_pos_dict = {(0,255,0):(200,200)}
-angle_dict = {(0,255,0): 50}
+angle_dict = {(0,255,0): 0}
 players_list = [(0,255,0)]
 my_player = (0,255,0)
 
