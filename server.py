@@ -29,16 +29,18 @@ class Degrees(Resource):
     def post(self):
         parser = reqparse.RequestParser()
 
-        parser.add_argument('userId', required=True)
-        parser.add_argument('name', required=True)
-        parser.add_argument('city', required=True)
+        parser.add_argument('myplayer', required=True)
+        parser.add_argument('angle', required=True)
 
         args = parser.parse_args()
 
-        pass
+        angle_dict[args['myplayer']] = args['angle']
+
+        return json.dumps(angle_dict)
 
 
 api.add_resource(Initialize, '/setup')
+api.add_resource(Degrees, '/running')
 
 if __name__ == '__main__':
     app.run()
