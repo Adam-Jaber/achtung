@@ -32,7 +32,7 @@ class Player:
     def check_new_pos(self, new_pos, players):
         for player in list(players):
             for i in range(1, len(player.pos_list) - 2):
-                if self.intersect(player.pos_list[i], player.pos_list[i+1], player.pos_list[-1], new_pos):
+                if self.intersect(player.pos_list[i], player.pos_list[i+1], self.pos_list[-1], new_pos):
                     return False
         for axis in (0, 1):
             if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:
