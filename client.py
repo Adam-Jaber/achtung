@@ -5,10 +5,9 @@ from player import Player
 import achtung_exceptions
 
 
-setup_list = json.loads(requests.get('http://127.0.0.1:5000/setup').json())
-print(setup_list)
-print((setup_list[1]))
-print(type(setup_list[1]))
+HOST_ADRESS = 'http://10.0.0.17:5000'
+
+setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
 #get this dicts, player_list and your player from server
 players_list = setup_list[0]
 start_pos_dict = setup_list[1]
@@ -58,7 +57,7 @@ while running:
     game_surface.fill((0,0,0))
 
     new_angle = check_rotation(my_player)
-    angle_dict = json.loads(requests.post(f'http://127.0.0.1:5000/running?myplayer={my_player}&angle={new_angle}').json())
+    angle_dict = json.loads(requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}').json())
 
     for player_color in players_list:
         if player_color not in lost_players:

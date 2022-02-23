@@ -43,4 +43,4 @@ api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
