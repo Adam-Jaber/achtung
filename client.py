@@ -50,8 +50,11 @@ textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
 
 waiting = True
 while waiting:
-    screen.fill((100,100,100))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
+    screen.fill((100,100,100))
     screen.blit(text, textRect)
     pygame.display.update()
 
