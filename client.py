@@ -42,9 +42,19 @@ def check_rotation(player_color):
     else:
         return 0
 
+font = pygame.font.Font('freesansbold.ttf', 32)
+text = font.render('Waiting for all players to connect', True, (200, 200, 200), (100, 100, 100))
+
+textRect = text.get_rect()
+textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+
 waiting = True
 while waiting:
-    print("waiting")
+    screen.fill((100,100,100))
+
+    screen.blit(text, textRect)
+    pygame.display.update()
+
     ready = json.loads(requests.post(f'{HOST_ADRESS}/setup?myplayer={my_player}').json())
     if ready:
         waiting = False
