@@ -25,12 +25,16 @@ class Initialize(Resource):
         Initialize.player += 1
         return json.dumps([players_list, start_pos_dict, angle_dict, reverse_dict, player_color])
 
+
+class Connect(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('myplayer', required=True)
         args = parser.parse_args()
 
-        ready_dict[args['myplayer']] = True
+        ready_dict[args['myplayer']] = not ready_dict[args['myplayer']]
+
+    def get(self):
         is_ready = True
         for bool_ in ready_dict.values():
             if bool_ is False:
@@ -54,6 +58,7 @@ class Degrees(Resource):
 
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
+api.add_resource(Connect, '/ready')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
