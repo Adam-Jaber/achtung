@@ -14,6 +14,8 @@ start_pos_dict = {color: (random.randrange(0, GAME_SIZE[0]), random.randrange(0,
 angle_dict = {color: 0 for color in COLORS}
 players_list = random.sample(COLORS, 4)
 
+ready_dict = {color: False for color in COLORS}
+
 
 
 class Initialize(Resource):
@@ -23,7 +25,18 @@ class Initialize(Resource):
         Initialize.player += 1
         return json.dumps([players_list, start_pos_dict, angle_dict, reverse_dict, player_color])
 
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('myplayer', required=True)
+        args = parser.parse_args()
 
+        ready_dict[args['myplayer']] = True
+        is_ready = True
+        for bool_ in ready_dict.values():
+            if bool_ is False:
+                is_ready = False
+
+        return json.dumps(is_ready)
 
 class Degrees(Resource):
     def post(self):

@@ -42,6 +42,12 @@ def check_rotation(player_color):
     else:
         return 0
 
+waiting = True
+while waiting:
+    print("waiting")
+    ready = json.loads(requests.post(f'{HOST_ADRESS}/setup?myplayer={my_player}').json())
+    if ready:
+        waiting = False
 
 
 
