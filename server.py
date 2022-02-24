@@ -17,7 +17,7 @@ players_list = random.sample(COLORS, 4)
 
 ready_dict = {color: False for color in COLORS}
 
-
+power_ups_dict = {color: [] for color in COLORS}
 
 class Initialize(Resource):
     player = 0
@@ -91,6 +91,7 @@ class PowerUps(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('player', required=True)
         args = parser.parse_args()
+
         power_up_list = power_ups_dict[args['player']][:]
         power_ups_dict[args['player']] = []
         return power_up_list

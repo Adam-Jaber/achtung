@@ -160,7 +160,8 @@ def won(player):
 
     pygame.display.update()
 
-def handle_powerups(player):
+def handle_powerups(*args):
+    player = args[0]
     power_ups_list = json.loads(requests.get(f'{HOST_ADRESS}/powerups?player={player}').json())
     for powerup, user in power_ups_list:
         POWER_UPS_DICT[powerup](players_dict[user], players_dict)
@@ -183,7 +184,7 @@ while running:
             if event.key == pygame.K_1:
                 use_powerup('speedrest')
 
-    _thread.start_new_thread(handle_powerups, my_player)
+    _thread.start_new_thread(handle_powerups, (my_player, ))
 
     if len(lost_players) == 3:
         restart()
