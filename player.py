@@ -2,11 +2,13 @@ import math
 import achtung_exceptions
 
 PLAYER_VEL = 1
-GAME_SIZE = (800, 600)
+GAME_SIZE = (600, 600)
+
 
 class Player:
     def __init__(self, first_pos):
         self.pos_list = [(0, 0), first_pos]
+        self.score = 0
 
     def next_pos(self, ang, reverse, players):
         slope = self.get_slope(self.pos_list[-1], self.pos_list[-2])
@@ -41,6 +43,9 @@ class Player:
 
     def get_pos_list(self):
         return self.pos_list
+
+    def reset(self, first_pos):
+        self.pos_list = [(0, 0), first_pos]
 
     @staticmethod
     def get_slope(pos1, pos2):

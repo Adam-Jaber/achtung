@@ -5,9 +5,9 @@ from player import Player
 import achtung_exceptions
 
 
-HOST_ADRESS = 'http://192.168.28.1:5000'
+HOST_ADRESS = 'http://10.0.0.15:5000'
 
-setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
+setup_list = json.loads(requests.post(f'{HOST_ADRESS}/setup?myname={input("enter your name")}').json())
 #get this dicts, player_list and your player from server
 players_list = setup_list[0]
 start_pos_dict = setup_list[1]
@@ -17,7 +17,7 @@ my_player = setup_list[4]
 
 
 SCREEN_SIZE = (800, 600)
-GAME_SIZE = (600,600)
+GAME_SIZE = (600, 600)
 
 
 players_dict = dict()
@@ -26,6 +26,7 @@ for player_color in players_list:
 
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
+game_surface = pygame.Surface(GAME_SIZE)
 
 lost_players = []
 
@@ -42,8 +43,9 @@ def check_rotation(player_color):
     else:
         return 0
 
-font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
+
+header_font = pygame.font.Font('freesansbold.ttf', 32)
+text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
 
 textRect = text.get_rect()
 textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
@@ -58,9 +60,9 @@ while waiting:
             if event.key == pygame.K_RETURN:
                 requests.post(f'{HOST_ADRESS}/ready?myplayer={my_player}')
                 if not ready:
-                    text = font.render('Waiting for the rest of the players to ready up', True, (200, 200, 200), (100, 100, 100))
+                    text = header_font.render('Waiting for the rest of the players to ready up', True, (200, 200, 200), (100, 100, 100))
                 else:
-                    text = font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
+                    text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
                 ready = not ready
     screen.fill((100,100,100))
     screen.blit(text, textRect)
@@ -70,19 +72,14 @@ while waiting:
     if game_ready:
         waiting = False
 
+score_font = pygame.font.Font('freesansbold.ttf', 12)
 
+name_dict = json.loads(requests.get(f'{HOST_ADRESS}/names').json())
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            pygame.quit()
-
-    screen.fill((200,200,200))
-
-    game_surface = pygame.Surface(GAME_SIZE)
-    game_surface.fill((0,0,0))
+def round():
+    screen.fill((200, 200, 200))
+    screen.blit(game_surface, (0, 0))
+    game_surface.fill((0, 0, 0))
 
     new_angle = check_rotation(my_player)
     angle_dict = json.loads(requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}').json())
@@ -90,8 +87,61 @@ while running:
     for player_color in players_list:
         if player_color not in lost_players:
             try:
-                reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
+                reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color],
+                                                                                 reverse_dict[player_color],
+                                                                                 players_dict.values())
             except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
-        pygame.draw.lines(screen, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
+                for player in [player for player in players_list if player not in lost_players]:
+                    players_dict[player].score += 1
+
+        pygame.draw.aalines(game_surface, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
+
+        score_text = score_font.render(f'{name_dict[player_color]}: {players_dict[player_color].score}', True, (255, 255, 255),
+                                       (200, 200, 200))
+        score_Rect = text.get_rect()
+        score_Rect.center = (1025, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
+        screen.blit(score_text, score_Rect)
     pygame.display.update()
+
+
+def restart():
+    global start_pos_dict, reverse_dict
+    start_pos_dict, reverse_dict = json.loads(requests.get(f"{HOST_ADRESS}/reset").json())
+    lost_players.clear()
+    for player in players_dict:
+        players_dict[player].reset(start_pos_dict[player])
+
+
+def won(player):
+    screen.fill((0, 0, 0))
+
+    win_text = header_font.render(f'{name_dict[player]} WON!', True, (255, 255, 255), (0, 0, 0))
+    win_rect = win_text.get_rect()
+    win_rect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+    screen.blit(win_text, win_rect)
+
+    pygame.display.update()
+
+
+win_screen = False
+winner = None
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+
+    if len(lost_players) == 3:
+        restart()
+
+    if not win_screen:
+        round()
+    else:
+        won(winner)
+
+    for player in players_list:
+        if players_dict[player].score >= 25:
+            winner = player
+            win_screen = True
