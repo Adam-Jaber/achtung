@@ -7,7 +7,7 @@ import achtung_exceptions
 
 HOST_ADRESS = 'http://10.0.0.15:5000'
 
-setup_list = json.loads(requests.post(f'{HOST_ADRESS}/setup?myname={input("enter your name")}').json())
+setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
 #get this dicts, player_list and your player from server
 players_list = setup_list[0]
 start_pos_dict = setup_list[1]
@@ -45,32 +45,67 @@ def check_rotation(player_color):
 
 
 header_font = pygame.font.Font('freesansbold.ttf', 32)
-text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
+text = header_font.render('Please enter your name', True, (200, 200, 200), (50, 50, 50))
 
 textRect = text.get_rect()
 textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
 
 ready = False
 waiting = True
+
+input_box = pygame.Rect(SCREEN_SIZE[0]//2 - 100, SCREEN_SIZE[1]//2 + 100, 140, 32)
+color_inactive = pygame.Color(255, 255, 255)
+color_active = pygame.Color('dodgerblue2')
+input_color = color_inactive
+active = False
+input_text = ''
+done = False
+
 while waiting:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if input_box.collidepoint(event.pos):
+                # Toggle the active variable.
+                active = not active
+            else:
+                active = False
+            # Change the current color of the input box.
+            input_color = color_active if active else color_inactive
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                requests.post(f'{HOST_ADRESS}/ready?myplayer={my_player}')
-                if not ready:
-                    text = header_font.render('Waiting for the rest of the players to ready up', True, (200, 200, 200), (100, 100, 100))
+            if active:
+                if event.key == pygame.K_RETURN:
+                    requests.post(f'{HOST_ADRESS}/ready?myplayer={my_player}')
+                    requests.post(f'{HOST_ADRESS}/names?player={my_player}&name={input_text}')
+
+                    ready = not ready
+                    if not ready:
+                        text = header_font.render('Please enter your name', True,
+                                                  (200, 200, 200), (50, 50, 50))
+                    else:
+                        text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200),
+                                                  (50, 50, 50))
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
                 else:
-                    text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
-                ready = not ready
-    screen.fill((100,100,100))
+                    input_text += event.unicode
+
+    screen.fill((50,50,50))
     screen.blit(text, textRect)
+    if not ready:
+        input_txt_surface = header_font.render(input_text, True, (200, 200, 200), (50, 50, 50))
+        input_box.w = max(200, input_txt_surface.get_width() + 10)
+        screen.blit(input_txt_surface, (input_box.x+5, input_box.y+5))
+        pygame.draw.rect(screen, input_color, input_box, 2)
     pygame.display.update()
 
     game_ready = json.loads(requests.get(f'{HOST_ADRESS}/ready').json())
     if game_ready:
         waiting = False
+
+
 
 score_font = pygame.font.Font('freesansbold.ttf', 12)
 
