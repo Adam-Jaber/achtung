@@ -86,11 +86,31 @@ class Names(Resource):
         name_dict[args['player']] = args['name']
 
 
+class PowerUps(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('player', required=True)
+        args = parser.parse_args()
+        power_up_list = power_ups_dict[args['player']][:]
+        power_ups_dict[args['player']] = []
+        return power_up_list
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('player', required=True)
+        parser.add_argument('powerup', required=True)
+        args = parser.parse_args()
+
+        for power_up_list in power_ups_dict.values():
+            power_up_list.append((args['powerup'], args['player']))
+
+
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
 api.add_resource(Connect, '/ready')
 api.add_resource(Reset, '/reset')
 api.add_resource(Names, '/names')
+api.add_resource(PowerUps, '/powerups')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
