@@ -7,7 +7,7 @@ import achtung_exceptions
 
 HOST_ADRESS = 'http://10.0.0.15:5000'
 
-setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
+setup_list = json.loads(requests.post(f'{HOST_ADRESS}/setup?myname={input("enter your name")}').json())
 #get this dicts, player_list and your player from server
 players_list = setup_list[0]
 start_pos_dict = setup_list[1]
@@ -74,6 +74,8 @@ while waiting:
 
 score_font = pygame.font.Font('freesansbold.ttf', 12)
 
+name_dict = json.loads(requests.get(f'{HOST_ADRESS}/names').json())
+
 def round():
     screen.fill((200, 200, 200))
     screen.blit(game_surface, (0, 0))
@@ -94,12 +96,14 @@ def round():
                     players_dict[player].score += 1
 
         pygame.draw.aalines(game_surface, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
-        score_text = score_font.render(f'{player_color}: {players_dict[player_color].score}', True, (255, 255, 255),
+
+        score_text = score_font.render(f'{name_dict[player_color]}: {players_dict[player_color].score}', True, (255, 255, 255),
                                        (200, 200, 200))
         score_Rect = text.get_rect()
         score_Rect.center = (1025, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
         screen.blit(score_text, score_Rect)
     pygame.display.update()
+
 
 def restart():
     global start_pos_dict, reverse_dict
@@ -112,7 +116,7 @@ def restart():
 def won(player):
     screen.fill((0, 0, 0))
 
-    win_text = header_font.render(f'{player} WON!', True, (255, 255, 255), (0, 0, 0))
+    win_text = header_font.render(f'{name_dict[player]} WON!', True, (255, 255, 255), (0, 0, 0))
     win_rect = win_text.get_rect()
     win_rect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
     screen.blit(win_text, win_rect)

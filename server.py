@@ -12,6 +12,7 @@ api = Api(app)
 reverse_dict = {color: random.choice((False, True)) for color in COLORS}
 start_pos_dict = {color: (random.randrange(0, GAME_SIZE[0]), random.randrange(0, GAME_SIZE[1])) for color in COLORS}
 angle_dict = {color: 0 for color in COLORS}
+name_dict = dict()
 players_list = random.sample(COLORS, 4)
 
 ready_dict = {color: False for color in COLORS}
@@ -20,9 +21,15 @@ ready_dict = {color: False for color in COLORS}
 
 class Initialize(Resource):
     player = 0
-    def get(self):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('myname', required=True)
+        args = parser.parse_args()
+
         player_color = players_list[Initialize.player]
         Initialize.player += 1
+
+        name_dict[player_color] = args['myname']
         return json.dumps([players_list, start_pos_dict, angle_dict, reverse_dict, player_color])
 
 
@@ -69,10 +76,16 @@ class Reset(Resource):
         return json.dumps([start_pos_dict, reverse_dict])
 
 
+class Names(Resource):
+    def get(self):
+        return json.dumps(name_dict)
+
+
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
 api.add_resource(Connect, '/ready')
 api.add_resource(Reset, '/reset')
+api.add_resource(Names, '/names')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
