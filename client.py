@@ -1,8 +1,10 @@
 import pygame
 import requests
 import json
+import _thread
 from player import Player
 import achtung_exceptions
+from power_ups import POWER_UPS_DICT
 
 
 HOST_ADRESS = 'http://10.0.0.15:5000'
@@ -158,6 +160,14 @@ def won(player):
 
     pygame.display.update()
 
+def handle_powerups(player):
+    power_ups_list = json.loads(requests.get(f'{HOST_ADRESS}/powerups?player={player}').json())
+    for powerup, user in power_ups_list:
+        POWER_UPS_DICT[powerup](players_dict[user], players_dict)
+
+def use_powerup(powerup):
+    requests.post(f'{HOST_ADRESS}/powerups?powerup={powerup}&player={my_player}')
+
 
 win_screen = False
 winner = None
@@ -167,6 +177,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_0:
+                use_powerup('speedself')
+            if event.key == pygame.K_1:
+                use_powerup('speedrest')
+
+    _thread.start_new_thread(handle_powerups, my_player)
 
     if len(lost_players) == 3:
         restart()

@@ -1,7 +1,7 @@
 import math
 import achtung_exceptions
 
-PLAYER_VEL = 1
+DEFAULT_VEL = 1
 GAME_SIZE = (600, 600)
 
 
@@ -9,6 +9,7 @@ class Player:
     def __init__(self, first_pos):
         self.pos_list = [(0, 0), first_pos]
         self.score = 0
+        self.player_vel = DEFAULT_VEL
 
     def next_pos(self, ang, reverse, players):
         slope = self.get_slope(self.pos_list[-1], self.pos_list[-2])
@@ -20,9 +21,9 @@ class Player:
         if (ang > 0 and slope > 0 and new_slope < 0) or (ang < 0 and slope < 0 and new_slope > 0):
             reverse = not reverse
         if reverse:
-            x_change = - PLAYER_VEL / math.sqrt(1 + math.pow(new_slope, 2))
+            x_change = - self.player_vel / math.sqrt(1 + math.pow(new_slope, 2))
         else:
-            x_change = PLAYER_VEL / math.sqrt(1 + math.pow(new_slope, 2))
+            x_change = self.player_vel / math.sqrt(1 + math.pow(new_slope, 2))
         new_x = self.pos_list[-1][0] + x_change
         new_y = self.pos_list[-1][1] + new_slope * x_change
         new_pos = (new_x, new_y)
