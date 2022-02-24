@@ -7,6 +7,7 @@ GAME_SIZE = (800, 600)
 class Player:
     def __init__(self, first_pos):
         self.pos_list = [(0, 0), first_pos]
+        self.score = 0
 
     def next_pos(self, ang, reverse, players):
         slope = self.get_slope(self.pos_list[-1], self.pos_list[-2])

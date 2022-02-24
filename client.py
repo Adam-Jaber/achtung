@@ -93,5 +93,8 @@ while running:
                 reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
             except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
+                for player in [player for player in players_list if player not in lost_players]:
+                    player.score += 1
+
         pygame.draw.lines(screen, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
     pygame.display.update()
