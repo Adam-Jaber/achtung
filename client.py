@@ -102,6 +102,7 @@ def round():
     pygame.display.update()
 
 def restart():
+    global start_pos_dict, reverse_dict
     start_pos_dict, reverse_dict = json.loads(requests.get(f"{HOST_ADRESS}/reset").json())
     lost_players.clear()
     for player in players_dict:
