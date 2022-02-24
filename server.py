@@ -55,6 +55,15 @@ class Degrees(Resource):
 
         return json.dumps(angle_dict)
 
+class Reset(Resource):
+    def get(self):
+        global reverse_dict, start_pos_dict, ready_dict
+
+        start_pos_dict = {color: (random.randrange(0, GAME_SIZE[0]), random.randrange(0, GAME_SIZE[1]))
+                          for color in COLORS}
+        reverse_dict = {color: random.choice((False, True)) for color in COLORS}
+
+        return json.dumps([start_pos_dict, reverse_dict])
 
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')

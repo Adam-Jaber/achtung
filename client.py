@@ -17,7 +17,7 @@ my_player = setup_list[4]
 
 
 SCREEN_SIZE = (800, 600)
-GAME_SIZE = (600,600)
+GAME_SIZE = (600, 600)
 
 
 players_dict = dict()
@@ -72,16 +72,10 @@ while waiting:
     if game_ready:
         waiting = False
 
+score_font = pygame.font.Font('freesansbold.ttf', 12)
 
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            pygame.quit()
-
-    screen.fill((200,200,200))
+def round():
+    screen.fill((200, 200, 200))
     screen.blit(game_surface, (0, 0))
     game_surface.fill((0, 0, 0))
 
@@ -91,11 +85,34 @@ while running:
     for player_color in players_list:
         if player_color not in lost_players:
             try:
-                reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color], reverse_dict[player_color], players_dict.values())
+                reverse_dict[player_color] = players_dict[player_color].next_pos(angle_dict[player_color],
+                                                                                 reverse_dict[player_color],
+                                                                                 players_dict.values())
             except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
                 for player in [player for player in players_list if player not in lost_players]:
                     players_dict[player].score += 1
 
         pygame.draw.aalines(game_surface, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
+        score_text = score_font.render(f'{player_color}: {players_dict[player_color].score}', True, (255, 255, 255),
+                                       (200, 200, 200))
+        score_Rect = text.get_rect()
+        score_Rect.center = (1025, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
+        screen.blit(score_text, score_Rect)
     pygame.display.update()
+
+def restart():
+    start_pos_dict, reverse_dict = json.loads(requests.get(f"{HOST_ADRESS}/reset").json())
+    lost_players.clear()
+    for player in players_dict:
+        players_dict[player].reset(start_pos_dict[player])
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+    if len(lost_players) == 3:
+        restart()
+    round()

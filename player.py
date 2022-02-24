@@ -44,6 +44,9 @@ class Player:
     def get_pos_list(self):
         return self.pos_list
 
+    def reset(self, first_pos):
+        self.pos_list = [(0, 0), first_pos]
+
     @staticmethod
     def get_slope(pos1, pos2):
         return (pos1[1] - pos2[1]) / (pos1[0] - pos2[0])
