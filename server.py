@@ -3,7 +3,7 @@ from flask_restful import Resource, Api, reqparse
 import random
 import json
 
-GAME_SIZE = (800,600)
+GAME_SIZE = (600, 600)
 COLORS = ['0,255,0', '255,0,0', '0,0,255', '255,255,0']
 
 app = Flask(__name__)
