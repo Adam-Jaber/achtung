@@ -44,8 +44,8 @@ def check_rotation(player_color):
         return 0
 
 
-font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
+header_font = pygame.font.Font('freesansbold.ttf', 32)
+text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
 
 textRect = text.get_rect()
 textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
@@ -60,9 +60,9 @@ while waiting:
             if event.key == pygame.K_RETURN:
                 requests.post(f'{HOST_ADRESS}/ready?myplayer={my_player}')
                 if not ready:
-                    text = font.render('Waiting for the rest of the players to ready up', True, (200, 200, 200), (100, 100, 100))
+                    text = header_font.render('Waiting for the rest of the players to ready up', True, (200, 200, 200), (100, 100, 100))
                 else:
-                    text = font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
+                    text = header_font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
                 ready = not ready
     screen.fill((100,100,100))
     screen.blit(text, textRect)
@@ -108,12 +108,36 @@ def restart():
     for player in players_dict:
         players_dict[player].reset(start_pos_dict[player])
 
+
+def won(player):
+    screen.fill((0, 0, 0))
+
+    win_text = header_font.render(f'{player} WON!', True, (255, 255, 255), (0, 0, 0))
+    win_rect = win_text.get_rect()
+    win_rect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+    screen.blit(win_text, win_rect)
+
+    pygame.display.update()
+
+
+win_screen = False
+winner = None
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
+
     if len(lost_players) == 3:
         restart()
-    round()
+
+    if not win_screen:
+        round()
+    else:
+        won(winner)
+
+    for player in players_list:
+        if players_dict[player].score >= 25:
+            winner = player
+            win_screen = True
