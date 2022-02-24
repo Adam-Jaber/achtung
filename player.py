@@ -1,7 +1,7 @@
 import math
 import achtung_exceptions
 
-PLAYER_VEL = 0.2
+PLAYER_VEL = 1
 GAME_SIZE = (800, 600)
 
 class Player:

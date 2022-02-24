@@ -5,7 +5,7 @@ from player import Player
 import achtung_exceptions
 
 
-HOST_ADRESS = 'http://10.0.0.17:5000'
+HOST_ADRESS = 'http://192.168.28.1:5000'
 
 setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
 #get this dicts, player_list and your player from server
@@ -36,9 +36,9 @@ def get_color(str):
 def check_rotation(player_color):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        return -0.3
+        return -1.5
     elif keys[pygame.K_RIGHT]:
-        return 0.3
+        return 1.5
     else:
         return 0
 
