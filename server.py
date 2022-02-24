@@ -21,15 +21,10 @@ ready_dict = {color: False for color in COLORS}
 
 class Initialize(Resource):
     player = 0
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('myname', required=True)
-        args = parser.parse_args()
-
+    def get(self):
         player_color = players_list[Initialize.player]
         Initialize.player += 1
 
-        name_dict[player_color] = args['myname']
         return json.dumps([players_list, start_pos_dict, angle_dict, reverse_dict, player_color])
 
 
@@ -79,6 +74,16 @@ class Reset(Resource):
 class Names(Resource):
     def get(self):
         return json.dumps(name_dict)
+
+    def post(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('player', required=True)
+        parser.add_argument('name', required=True)
+
+        args = parser.parse_args()
+
+        name_dict[args['player']] = args['name']
 
 
 api.add_resource(Initialize, '/setup')
