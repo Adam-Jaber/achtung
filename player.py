@@ -2,7 +2,8 @@ import math
 import achtung_exceptions
 
 PLAYER_VEL = 1
-GAME_SIZE = (800, 600)
+GAME_SIZE = (600, 600)
+
 
 class Player:
     def __init__(self, first_pos):

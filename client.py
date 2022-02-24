@@ -5,7 +5,7 @@ from player import Player
 import achtung_exceptions
 
 
-HOST_ADRESS = 'http://192.168.28.1:5000'
+HOST_ADRESS = 'http://10.0.0.15:5000'
 
 setup_list = json.loads(requests.get(f'{HOST_ADRESS}/setup').json())
 #get this dicts, player_list and your player from server
@@ -26,6 +26,7 @@ for player_color in players_list:
 
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
+game_surface = pygame.Surface(GAME_SIZE)
 
 lost_players = []
 
@@ -41,6 +42,7 @@ def check_rotation(player_color):
         return 1.5
     else:
         return 0
+
 
 font = pygame.font.Font('freesansbold.ttf', 32)
 text = font.render('Waiting for all players to ready up', True, (200, 200, 200), (100, 100, 100))
@@ -80,9 +82,8 @@ while running:
             pygame.quit()
 
     screen.fill((200,200,200))
-
-    game_surface = pygame.Surface(GAME_SIZE)
-    game_surface.fill((0,0,0))
+    screen.blit(game_surface, (0, 0))
+    game_surface.fill((0, 0, 0))
 
     new_angle = check_rotation(my_player)
     angle_dict = json.loads(requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}').json())
@@ -94,7 +95,7 @@ while running:
             except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
                 for player in [player for player in players_list if player not in lost_players]:
-                    player.score += 1
+                    players_dict[player].score += 1
 
-        pygame.draw.lines(screen, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
+        pygame.draw.aalines(game_surface, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
     pygame.display.update()
