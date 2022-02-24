@@ -65,9 +65,11 @@ class Reset(Resource):
 
         return json.dumps([start_pos_dict, reverse_dict])
 
+
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
 api.add_resource(Connect, '/ready')
+api.add_resource(Reset, '/reset')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
