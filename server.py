@@ -66,7 +66,6 @@ class Degrees(Resource):
             Degrees.call_dict[args['myplayer']] += 1
             return json.dumps(angle_dict)
         else:
-            Degrees.call_dict[args['myplayer']] += 1
             return json.dumps([])
 
 class Reset(Resource):
