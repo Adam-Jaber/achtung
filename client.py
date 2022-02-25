@@ -123,7 +123,8 @@ def round():
     while True:
         try:
             angle_dict = json.loads(requests.get(f'{HOST_ADRESS}/running?myplayer={my_player}').json())
-            break
+            if type(angle_dict) is dict:
+                break
         except:
             pass
     for player_color in players_list:
