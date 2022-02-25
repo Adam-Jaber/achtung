@@ -45,6 +45,8 @@ class Connect(Resource):
         return json.dumps(is_ready)
 
 class Degrees(Resource):
+    call_dict = {player: 0 for player in COLORS}
+
     def post(self):
         parser = reqparse.RequestParser()
 
@@ -55,7 +57,17 @@ class Degrees(Resource):
 
         angle_dict[args['myplayer']] = float(args['angle'])
 
-        return json.dumps(angle_dict)
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('myplayer', required=True)
+        args = parser.parse_args()
+
+        if Degrees.call_dict[args['myplayer']] == min(Degrees.call_dict.values()):
+            Degrees.call_dict[args['myplayer']] += 1
+            return json.dumps(angle_dict)
+        else:
+            Degrees.call_dict[args['myplayer']] += 1
+            return json.dumps([])
 
 class Reset(Resource):
     call_num = 0

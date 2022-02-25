@@ -119,8 +119,13 @@ def round():
     game_surface.fill((0, 0, 0))
 
     new_angle = check_rotation(my_player)
-    angle_dict = json.loads(requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}').json())
-
+    requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}')
+    while True:
+        try:
+            angle_dict = json.loads(requests.get(f'{HOST_ADRESS}/running?myplayer={my_player}').json())
+            break
+        except:
+            pass
     for player_color in players_list:
         if player_color not in lost_players:
             try:
