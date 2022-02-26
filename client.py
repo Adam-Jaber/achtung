@@ -4,7 +4,7 @@ import json
 import _thread
 from player import Player
 import achtung_exceptions
-from power_ups import POWER_UPS_DICT, POWER_UPS_IMAGES
+from power_ups import *
 
 
 HOST_ADRESS = 'http://10.0.0.15:5000'
@@ -145,15 +145,6 @@ def round():
         score_Rect = text.get_rect()
         score_Rect.center = (1025, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
         screen.blit(score_text, score_Rect)
-
-    powerup_list = json.loads(requests.get(f"{HOST_ADRESS}/activepower").json())
-    for powerup, pos in powerup_list:
-        game_surface.blit(POWER_UPS_IMAGES[powerup], pos)
-        head_x, head_y = players_dict[my_player].get_head()
-        if pos[0] <= head_x <= pos[0] + 40 and pos[1] <= head_y <= pos[1] + 40:
-            requests.post(f'{HOST_ADRESS}/activepower')
-            use_powerup(powerup)
-
     pygame.display.update()
 
 
@@ -192,6 +183,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                use_powerup('speedself')
+            if event.key == pygame.K_DOWN:
+                use_powerup('speedrest')
 
     handle_powerups(my_player)
 

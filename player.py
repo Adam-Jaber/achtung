@@ -1,7 +1,7 @@
 import math
 import achtung_exceptions
 
-DEFAULT_VEL = 1.5
+DEFAULT_VEL = 1
 GAME_SIZE = (600, 600)
 
 
@@ -44,9 +44,6 @@ class Player:
 
     def get_pos_list(self):
         return self.pos_list
-
-    def get_head(self):
-        return self.pos_list[-1]
 
     def reset(self, first_pos):
         self.pos_list = [(0, 0), first_pos]
