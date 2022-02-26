@@ -2,9 +2,13 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import random
 import json
+import time
+import _thread
+
 
 GAME_SIZE = (600, 600)
 COLORS = ['0,255,0', '255,0,0', '0,0,255', '255,255,0']
+POWER_UPS_LIST = ['speedself', 'speedrest', 'slowself', 'slowrest']
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,6 +22,16 @@ players_list = random.sample(COLORS, 4)
 ready_dict = {color: False for color in COLORS}
 
 power_ups_dict = {color: [] for color in COLORS}
+
+def powerup_creator(*args):
+    while True:
+        args[0].append((random.choice(POWER_UPS_LIST), (random.randrange(0,GAME_SIZE[0] -40), random.randrange(0,GAME_SIZE[1] - 40))))
+        time.sleep(10)
+        args[0].clear()
+
+powerup_list = []
+_thread.start_new_thread(powerup_creator, (powerup_list,))
+
 
 class Initialize(Resource):
     player = 0
@@ -117,12 +131,21 @@ class PowerUps(Resource):
             power_up_list.append((args['powerup'], args['player']))
 
 
+class ActivePowerups(Resource):
+    def get(self):
+        return json.dumps(powerup_list)
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        powerup_list.clear()
+
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
 api.add_resource(Connect, '/ready')
 api.add_resource(Reset, '/reset')
 api.add_resource(Names, '/names')
 api.add_resource(PowerUps, '/powerups')
+api.add_resource(ActivePowerups, '/activepower')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
