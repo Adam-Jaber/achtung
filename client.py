@@ -192,11 +192,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                use_powerup('speedself')
-            if event.key == pygame.K_DOWN:
-                use_powerup('speedrest')
 
     handle_powerups(my_player)
 
