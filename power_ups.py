@@ -1,6 +1,5 @@
 import time
 import _thread
-import pygame
 
 def get_enemy_list(player, players_dict):
     return [enemy for enemy in players_dict.values() if enemy != player]
@@ -30,5 +29,3 @@ def inflict_slow_powerup(*args):
 
 POWER_UPS_DICT = {'speedself': get_speed_powerup, 'speedrest': inflict_speed_powerup,
                   'slowself': get_slow_powerup, 'slowrest': inflict_slow_powerup}
-
-POWER_UPS_IMAGES = {powerup: pygame.image.load(f'{powerup}.png') for powerup in POWER_UPS_DICT}
