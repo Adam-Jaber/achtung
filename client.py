@@ -39,9 +39,9 @@ def get_color(str):
 def check_rotation(player_color):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        return -1.5
+        return -3
     elif keys[pygame.K_RIGHT]:
-        return 1.5
+        return 3
     else:
         return 0
 
