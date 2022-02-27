@@ -3,6 +3,7 @@ import _thread
 import pygame
 import os
 
+
 def get_enemy_list(player, players_dict):
     return [enemy for enemy in players_dict.values() if enemy != player]
 
