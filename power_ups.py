@@ -9,7 +9,7 @@ def get_enemy_list(player, players_dict):
 def get_speed_powerup(*args):
     player = args[0]
     player.player_vel *= 1.5
-    time.sleep(5)
+    time.sleep(9)
     player.player_vel /= 1.5
 
 def inflict_speed_powerup(*args):
