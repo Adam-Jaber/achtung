@@ -37,15 +37,19 @@ def get_color(str):
 
 
 def check_rotation(player_color):
+    """get the player's angle for the frame
+    player_color: str = 'int,int,int'
+    """
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        return -1.5
+        return -3.5
     elif keys[pygame.K_RIGHT]:
-        return 1.5
+        return 3.5
     else:
         return 0
 
 
+# initialize waiting loop's parameters
 header_font = pygame.font.Font('freesansbold.ttf', 32)
 text = header_font.render('Please enter your name', True, (200, 200, 200), (50, 50, 50))
 
@@ -62,7 +66,7 @@ input_color = color_inactive
 active = False
 input_text = ''
 done = False
-
+# game setup loop - wait for all players to report ready to the server
 while waiting:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -77,7 +81,7 @@ while waiting:
             # Change the current color of the input box.
             input_color = color_active if active else color_inactive
         if event.type == pygame.KEYDOWN:
-            if active:
+            if active:  # add typed characters to the input box (except of a backspace)
                 if event.key == pygame.K_RETURN:
                     requests.post(f'{HOST_ADRESS}/ready?myplayer={my_player}')
                     requests.post(f'{HOST_ADRESS}/names?player={my_player}&name={input_text}')
@@ -108,16 +112,17 @@ while waiting:
         waiting = False
 
 
-
 score_font = pygame.font.Font('freesansbold.ttf', 12)
-
 name_dict = json.loads(requests.get(f'{HOST_ADRESS}/names').json())
 
+
 def round():
+    """ this function represents a single frame in a round of the game"""
     screen.fill((200, 200, 200))
     screen.blit(game_surface, (0, 0))
     game_surface.fill((0, 0, 0))
 
+    # get players angle send to server and wait for server to return all players angles when synchronized
     new_angle = check_rotation(my_player)
     requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}')
     while True:
@@ -127,6 +132,7 @@ def round():
                 break
         except:
             pass
+    # render to screen all players, if players still alive generate their next position.
     for player_color in players_list:
         if player_color not in lost_players:
             try:
@@ -136,16 +142,18 @@ def round():
             except achtung_exceptions.CollisionError:
                 lost_players.append(player_color)
                 for player in [player for player in players_list if player not in lost_players]:
-                    players_dict[player].score += 1
+                    players_dict[player].score += 1 # if a player dies increment others score
 
         pygame.draw.aalines(game_surface, get_color(player_color), False, players_dict[player_color].get_pos_list()[1:])
 
+        # this portion handles rendering a scoreboard for the player
         score_text = score_font.render(f'{name_dict[player_color]}: {players_dict[player_color].score}', True, (255, 255, 255),
                                        (200, 200, 200))
         score_Rect = text.get_rect()
-        score_Rect.center = (1025, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
+        score_Rect.center = (975, (SCREEN_SIZE[1] // 6) * (players_list.index(player_color) + 1))
         screen.blit(score_text, score_Rect)
 
+    # get active powerup from server and render it to screen, if a colision accours activate.
     powerup_list = json.loads(requests.get(f"{HOST_ADRESS}/activepower").json())
     for powerup, pos in powerup_list:
         game_surface.blit(POWER_UPS_IMAGES[powerup], pos)
@@ -158,6 +166,7 @@ def round():
 
 
 def restart():
+    """reset basic parameters of the game"""
     global start_pos_dict, reverse_dict
     start_pos_dict, reverse_dict = json.loads(requests.get(f"{HOST_ADRESS}/reset").json())
     lost_players.clear()
@@ -166,6 +175,9 @@ def restart():
 
 
 def won(player):
+    """render winning screen
+    player: str = 'int,int,int'
+    """
     screen.fill((0, 0, 0))
 
     win_text = header_font.render(f'{name_dict[player]} WON!', True, (255, 255, 255), (0, 0, 0))
@@ -176,14 +188,20 @@ def won(player):
     pygame.display.update()
 
 def handle_powerups(player_):
+    """activate player's active powerups - run powerup in parallel to the game
+    player_: str = 'int,int,int'
+    """
     power_ups_list = requests.get(f'{HOST_ADRESS}/powerups?player={player_}').json()
     for powerup, user in power_ups_list:
         _thread.start_new_thread(POWER_UPS_DICT[powerup], (players_dict[user], players_dict))
 
 def use_powerup(powerup):
+    """post to server using a powerup
+    powerup: str from server.POWER_UPs_LIST
+    """
     requests.post(f'{HOST_ADRESS}/powerups?powerup={powerup}&player={my_player}')
 
-
+# main game loop
 win_screen = False
 winner = None
 running = True

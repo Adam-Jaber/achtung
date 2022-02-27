@@ -26,7 +26,7 @@ power_ups_dict = {color: [] for color in COLORS}
 def powerup_creator(*args):
     while True:
         args[0].append((random.choice(POWER_UPS_LIST), (random.randrange(0,GAME_SIZE[0] -40), random.randrange(0,GAME_SIZE[1] - 40))))
-        time.sleep(10)
+        time.sleep(18)
         args[0].clear()
 
 powerup_list = []

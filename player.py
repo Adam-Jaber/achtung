@@ -1,7 +1,7 @@
 import math
 import achtung_exceptions
 
-DEFAULT_VEL = 1.5
+DEFAULT_VEL = 2.5
 GAME_SIZE = (600, 600)
 
 
