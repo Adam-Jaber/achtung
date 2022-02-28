@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import requests
 import json
@@ -158,7 +160,8 @@ def round():
     for powerup, pos in powerup_list:
         game_surface.blit(POWER_UPS_IMAGES[powerup], pos)
         head_x, head_y = players_dict[my_player].get_head()
-        if pos[0] <= head_x <= pos[0] + 40 and pos[1] <= head_y <= pos[1] + 40:
+        # check for collision of player with powerup
+        if math.sqrt((pos[0] + 20 - head_x)**2 + (pos[1] + 20 - head_y)**2) <= 20:
             requests.post(f'{HOST_ADRESS}/activepower')
             use_powerup(powerup)
 
