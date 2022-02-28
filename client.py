@@ -42,6 +42,7 @@ def check_rotation(player_color):
     """get the player's angle for the frame
     player_color: str = 'int,int,int'
     """
+    print('getting angle')
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         return -3.5
@@ -127,10 +128,12 @@ def round():
     # get players angle send to server and wait for server to return all players angles when synchronized
     new_angle = check_rotation(my_player)
     requests.post(f'{HOST_ADRESS}/running?myplayer={my_player}&angle={new_angle}')
+    print('sent angle')
     while True:
         try:
             angle_dict = json.loads(requests.get(f'{HOST_ADRESS}/running?myplayer={my_player}').json())
             if type(angle_dict) is dict:
+                print('recived dict')
                 break
         except:
             pass

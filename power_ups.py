@@ -20,7 +20,7 @@ def inflict_speed_powerup(*args):
 def get_slow_powerup(*args):
     player = args[0]
     player.player_vel /= 1.5
-    time.sleep(5)
+    time.sleep(9)
     player.player_vel *= 1.5
 
 def inflict_slow_powerup(*args):
