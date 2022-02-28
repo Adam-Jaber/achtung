@@ -85,14 +85,15 @@ class Degrees(Resource):
 class Reset(Resource):
     call_num = 0
     def get(self):
-        if Reset.call_num % 4 == 0:
+        Reset.call_num += 1
+        if Reset.call_num % 4 == 1:
             global reverse_dict, start_pos_dict, ready_dict
 
             start_pos_dict = {color: (random.randrange(0, GAME_SIZE[0]), random.randrange(0, GAME_SIZE[1]))
                               for color in COLORS}
             reverse_dict = {color: random.choice((False, True)) for color in COLORS}
 
-        Reset.call_num += 1
+
         return json.dumps([start_pos_dict, reverse_dict])
 
 
