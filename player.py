@@ -17,6 +17,12 @@ class Player:
             new_slope_ang = ang + math.degrees(math.atan(slope))
         else:
             new_slope_ang = ang + (math.degrees(math.atan(slope)) + 180)
+        if new_slope_ang == 90:     # this section is meant to insure that at no point is the player perpendicular to x
+            if ang > 0:
+                new_slope_ang = 89.5
+            else:
+                new_slope_ang = 90.5
+
         new_slope = math.tan(math.radians(new_slope_ang))
         if (ang > 0 and slope > 0 and new_slope < 0) or (ang < 0 and slope < 0 and new_slope > 0):
             reverse = not reverse
