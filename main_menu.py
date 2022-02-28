@@ -2,6 +2,8 @@ import _thread
 import socket
 
 import pygame
+
+from server import run_new_server
 from client import Game_client
 
 SCREEN_SIZE = (800, 600)
@@ -21,7 +23,7 @@ def main_loop():
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
-                    _thread.start_new_thread(new_server, tuple())
+                    _thread.start_new_thread(run_new_server, tuple())
                     host = get_public_ip()
                     Game_client(host, screen)
                 elif event.key == pygame.K_j:
