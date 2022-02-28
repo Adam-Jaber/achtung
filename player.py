@@ -47,7 +47,6 @@ class Player:
                     return False
         for axis in (0, 1):
             if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:
-                print(new_pos, axis)
                 self.pos_list.append(new_pos)
                 return False
         return True
