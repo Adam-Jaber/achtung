@@ -36,9 +36,12 @@ class Player:
         for player in list(players):
             for i in range(1, len(player.pos_list) - 2):
                 if self.intersect(player.pos_list[i], player.pos_list[i+1], self.pos_list[-1], new_pos):
+                    self.pos_list.append(self.get_intersection_point((player.pos_list[i], player.pos_list[i+1]),
+                                                                     (self.pos_list[-1], new_pos)))
                     return False
         for axis in (0, 1):
             if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:
+                self.pos_list.append(new_pos)
                 return False
         return True
 
@@ -62,3 +65,18 @@ class Player:
     @staticmethod
     def intersect(A, B, C, D):
         return Player.ccw(A, C, D) != Player.ccw(B, C, D) and Player.ccw(A, B, C) != Player.ccw(A, B, D)
+
+    @staticmethod
+    def get_intersection_point(line1, line2):
+        xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+        ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+        def det(a, b):
+            return a[0] * b[1] - a[1] * b[0]
+
+        div = det(xdiff, ydiff)
+
+        d = (det(*line1), det(*line2))
+        x = det(d, xdiff) / div
+        y = det(d, ydiff) / div
+        return x, y
