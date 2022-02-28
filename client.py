@@ -14,7 +14,7 @@ class Game_client:
 
     def __init__(self, host, screen):
         self.screen = screen
-        self.host = host
+        self.host = host + ':5000'
         self.game_surface = pygame.Surface(GAME_SIZE)
 
         self.score_font = pygame.font.Font('freesansbold.ttf', 12)
