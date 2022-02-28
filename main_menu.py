@@ -89,3 +89,6 @@ def get_public_ip():
     local_ip = socket.gethostbyname(hostname)
 
     return local_ip
+
+if __name__ == '__main__':
+    main_loop()
