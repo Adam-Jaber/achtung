@@ -148,5 +148,5 @@ api.add_resource(Names, '/names')
 api.add_resource(PowerUps, '/powerups')
 api.add_resource(ActivePowerups, '/activepower')
 
-if __name__ == '__main__':
+def run_new_server():
     app.run(host='0.0.0.0')
