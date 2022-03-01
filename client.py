@@ -119,7 +119,7 @@ class Game_client:
                 pygame.draw.rect(self.screen, input_color, input_box, 2)
             code_text = self.header_font.render(f'connected to {self.game_code}', True, (0,155,0), (50,50,50))
             code_rect = code_text.get_rect()
-            code_rect.center(SCREEN_SIZE[0]//2, SCREEN_SIZE[1]//4 * 3)
+            code_rect.center = (SCREEN_SIZE[0]//2, SCREEN_SIZE[1]//4 * 3)
             self.screen.blit(code_text, code_rect)
             pygame.display.update()
 
