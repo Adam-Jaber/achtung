@@ -1,8 +1,6 @@
 import _thread
 import socket
-
 import pygame
-
 from server import run_new_server
 from client import Game_client
 

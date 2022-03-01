@@ -1,5 +1,4 @@
 import math
-
 import pygame
 import requests
 import json
@@ -7,6 +6,7 @@ import _thread
 from player import Player
 import achtung_exceptions
 from power_ups import POWER_UPS_DICT, POWER_UPS_IMAGES
+
 SCREEN_SIZE = (800, 600)
 GAME_SIZE = (600, 600)
 
@@ -14,7 +14,7 @@ class Game_client:
 
     def __init__(self, host, screen):
         self.screen = screen
-        self.host = host + ':5000'
+        self.host = 'http://' + host + ':5000'
         self.game_surface = pygame.Surface(GAME_SIZE)
 
         self.score_font = pygame.font.Font('freesansbold.ttf', 12)
