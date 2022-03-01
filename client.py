@@ -12,9 +12,10 @@ GAME_SIZE = (600, 600)
 
 class Game_client:
 
-    def __init__(self, host, screen):
+    def __init__(self, code, screen):
         self.screen = screen
-        self.host = 'http://' + host + ':5000'
+        self.game_code = code
+        self.host = 'http://' + code + ':5000'
         self.game_surface = pygame.Surface(GAME_SIZE)
 
         self.score_font = pygame.font.Font('freesansbold.ttf', 12)
@@ -102,7 +103,7 @@ class Game_client:
                                 text = self.header_font.render('Please enter your name', True,
                                                           (200, 200, 200), (50, 50, 50))
                             else:
-                                text = self.header_font.render(f'waiting for players. game code:{self.host}', True, (200, 200, 200),
+                                text = self.header_font.render(f'waiting for players. game code:{self.game_code}', True, (200, 200, 200),
                                                           (50, 50, 50))
                         elif event.key == pygame.K_BACKSPACE:
                             input_text = input_text[:-1]
