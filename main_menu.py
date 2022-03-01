@@ -71,6 +71,8 @@ def enter_game():
                     else:
                         input_text += event.unicode
 
+        screen.fill((50,50,50))
+
         input_txt_surface = header_font.render(input_text, True, (200, 200, 200), (50, 50, 50))
         input_box.w = max(200, input_txt_surface.get_width() + 10)
         screen.blit(input_txt_surface, (input_box.x + 5, input_box.y + 5))
