@@ -19,7 +19,7 @@ class Game_client:
         self.game_surface = pygame.Surface(GAME_SIZE)
 
         self.score_font = pygame.font.Font('freesansbold.ttf', 12)
-        self.header_font = pygame.font.Font('freesansbold.ttf', 32)
+        self.header_font = pygame.font.Font('freesansbold.ttf', 24)
 
         self.setup()
         self.wait_for_game()
