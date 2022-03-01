@@ -103,7 +103,7 @@ class Game_client:
                                 text = self.header_font.render('Please enter your name', True,
                                                           (200, 200, 200), (50, 50, 50))
                             else:
-                                text = self.header_font.render(f'waiting for players. game code:{self.game_code}', True, (200, 200, 200),
+                                text = self.header_font.render('waiting for players.', True, (200, 200, 200),
                                                           (50, 50, 50))
                         elif event.key == pygame.K_BACKSPACE:
                             input_text = input_text[:-1]
