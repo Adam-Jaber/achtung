@@ -19,7 +19,7 @@ class Game_client:
         self.game_surface = pygame.Surface(GAME_SIZE)
 
         self.score_font = pygame.font.Font('freesansbold.ttf', 12)
-        self.header_font = pygame.font.Font('freesansbold.ttf', 24)
+        self.header_font = pygame.font.Font('freesansbold.ttf', 32)
 
         self.setup()
         self.wait_for_game()
@@ -117,6 +117,10 @@ class Game_client:
                 input_box.w = max(200, input_txt_surface.get_width() + 10)
                 self.screen.blit(input_txt_surface, (input_box.x+5, input_box.y+5))
                 pygame.draw.rect(self.screen, input_color, input_box, 2)
+            code_text = self.header_font.render(f'connected to {self.game_code}', True, (0,155,0), (50,50,50))
+            code_rect = code_text.get_rect()
+            code_rect.center(SCREEN_SIZE[0]//2, SCREEN_SIZE[1]//4 * 3)
+            self.screen.blit(code_text, code_rect)
             pygame.display.update()
 
             game_ready = json.loads(requests.get(f'{self.host}/ready').json())
