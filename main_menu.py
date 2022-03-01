@@ -28,6 +28,7 @@ def main_loop():
                     choosing = False
                     enter_game()
 
+        screen.fill((50, 50, 50))
         textRect = text.get_rect()
         textRect.center = (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
         screen.blit(text, textRect)
