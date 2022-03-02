@@ -43,7 +43,8 @@ class Player:
         for player in list(players):
             for i in range(1, len(player.pos_list) - 2):
                 if self.intersects(player.pos_list[i], player.pos_list[i + 1], self.pos_list[-1], new_pos):
-                    self.pos_list.append(self.get_intersection_point((player.pos_list[i], player.pos_list[i + 1]), (self.pos_list[-1], new_pos)))
+                    self.pos_list.append(self.get_intersection_point((player.pos_list[i], player.pos_list[i + 1]),
+                                                                     (self.pos_list[-1], new_pos)))
                     return False
         for axis in (0, 1):
             if new_pos[axis] <= 0 or new_pos[axis] >= GAME_SIZE[axis]:
@@ -63,10 +64,6 @@ class Player:
     @staticmethod
     def get_slope(pos1, pos2):
         return (pos1[1] - pos2[1]) / (pos1[0] - pos2[0])
-
-    @staticmethod
-    def ccw(A, B, C):
-        return (C[1] - A[1]) * (B[0] - A[0]) > (B[1] - A[1]) * (C[0] - A[0])
 
     @staticmethod
     def intersects(A, B, C, D):

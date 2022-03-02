@@ -2,12 +2,13 @@ import _thread
 import socket
 import pygame
 from server import run_new_server
-from client import Game_client
+from client import GameClient
 
 SCREEN_SIZE = (800, 600)
 
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
+
 
 def main_loop():
     header_font = pygame.font.Font('freesansbold.ttf', 32)
@@ -23,7 +24,7 @@ def main_loop():
                 if event.key == pygame.K_c:
                     _thread.start_new_thread(run_new_server, tuple())
                     host = get_public_ip()
-                    Game_client(host, screen)
+                    GameClient(host, screen)
                 elif event.key == pygame.K_j:
                     choosing = False
                     enter_game()
@@ -63,7 +64,7 @@ def enter_game():
                 if active:  # add typed characters to the input box (except of a backspace)
                     if event.key == pygame.K_RETURN:
                         try:
-                            Game_client(input_text, screen)
+                            GameClient(input_text, screen)
                             entering = False
                         except:
                             input_text = ''
@@ -90,6 +91,7 @@ def get_public_ip():
     local_ip = socket.gethostbyname(hostname)
 
     return local_ip
+
 
 if __name__ == '__main__':
     main_loop()

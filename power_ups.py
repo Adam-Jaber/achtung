@@ -3,8 +3,10 @@ import _thread
 import pygame
 import os
 
+
 def get_enemy_list(player, players_dict):
     return [enemy for enemy in players_dict.values() if enemy != player]
+
 
 def get_speed_powerup(*args):
     player = args[0]
@@ -12,16 +14,19 @@ def get_speed_powerup(*args):
     time.sleep(9)
     player.player_vel /= 1.5
 
+
 def inflict_speed_powerup(*args):
     player, players_dict = args[0], args[1]
     for enemy in get_enemy_list(player, players_dict):
         _thread.start_new_thread(get_speed_powerup, (enemy, ))
+
 
 def get_slow_powerup(*args):
     player = args[0]
     player.player_vel /= 1.5
     time.sleep(9)
     player.player_vel *= 1.5
+
 
 def inflict_slow_powerup(*args):
     player, players_dict = args[0], args[1]

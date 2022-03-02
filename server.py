@@ -23,11 +23,14 @@ ready_dict = {color: False for color in COLORS}
 
 power_ups_dict = {color: [] for color in COLORS}
 
+
 def powerup_creator(*args):
     while True:
-        args[0].append((random.choice(POWER_UPS_LIST), (random.randrange(0,GAME_SIZE[0] -40), random.randrange(0,GAME_SIZE[1] - 40))))
-        time.sleep(18)
+        args[0].append((random.choice(POWER_UPS_LIST), (random.randrange(0, GAME_SIZE[0] - 40),
+                                                        random.randrange(0, GAME_SIZE[1] - 40))))
+        time.sleep(20)
         args[0].clear()
+
 
 powerup_list = []
 _thread.start_new_thread(powerup_creator, (powerup_list,))
@@ -35,6 +38,7 @@ _thread.start_new_thread(powerup_creator, (powerup_list,))
 
 class Initialize(Resource):
     player = 0
+
     def get(self):
         player_color = players_list[Initialize.player]
         Initialize.player += 1
@@ -57,6 +61,7 @@ class Connect(Resource):
                 is_ready = False
 
         return json.dumps(is_ready)
+
 
 class Degrees(Resource):
     call_dict = {player: 0 for player in COLORS}
@@ -82,8 +87,10 @@ class Degrees(Resource):
         else:
             return json.dumps([])
 
+
 class Reset(Resource):
     call_num = 0
+
     def get(self):
         Reset.call_num += 1
         if Reset.call_num % 4 == 1:
@@ -92,7 +99,6 @@ class Reset(Resource):
             start_pos_dict = {color: (random.randrange(0, GAME_SIZE[0]), random.randrange(0, GAME_SIZE[1]))
                               for color in COLORS}
             reverse_dict = {color: random.choice((False, True)) for color in COLORS}
-
 
         return json.dumps([start_pos_dict, reverse_dict])
 
@@ -137,8 +143,8 @@ class ActivePowerups(Resource):
         return json.dumps(powerup_list)
 
     def post(self):
-        parser = reqparse.RequestParser()
         powerup_list.clear()
+
 
 api.add_resource(Initialize, '/setup')
 api.add_resource(Degrees, '/running')
@@ -147,6 +153,7 @@ api.add_resource(Reset, '/reset')
 api.add_resource(Names, '/names')
 api.add_resource(PowerUps, '/powerups')
 api.add_resource(ActivePowerups, '/activepower')
+
 
 def run_new_server():
     app.run(host='0.0.0.0')

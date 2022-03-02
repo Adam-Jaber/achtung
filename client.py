@@ -10,7 +10,8 @@ from power_ups import POWER_UPS_DICT, POWER_UPS_IMAGES
 SCREEN_SIZE = (800, 600)
 GAME_SIZE = (600, 600)
 
-class Game_client:
+
+class GameClient:
 
     def __init__(self, code, screen):
         self.screen = screen
@@ -25,9 +26,7 @@ class Game_client:
         self.wait_for_game()
         self.name_dict = json.loads(requests.get(f'{self.host}/names').json())
 
-
         self.main_loop()
-
 
     def setup(self):
         setup_list = json.loads(requests.get(f'{self.host}/setup').json())
@@ -101,10 +100,10 @@ class Game_client:
                             ready = not ready
                             if not ready:
                                 text = self.header_font.render('Please enter your name', True,
-                                                          (200, 200, 200), (50, 50, 50))
+                                                               (200, 200, 200), (50, 50, 50))
                             else:
                                 text = self.header_font.render('waiting for players.', True, (200, 200, 200),
-                                                          (50, 50, 50))
+                                                               (50, 50, 50))
                         elif event.key == pygame.K_BACKSPACE:
                             input_text = input_text[:-1]
                         else:
@@ -152,17 +151,18 @@ class Game_client:
                     for player in [player for player in self.players_list if player not in self.lost_players]:
                         self.players_dict[player].score += 1     # if a player dies increment others score
 
-            pygame.draw.aalines(self.game_surface, self.get_color(player_color), False, self.players_dict[player_color].get_pos_list()[1:])
+            pygame.draw.aalines(self.game_surface, self.get_color(player_color), False,
+                                self.players_dict[player_color].get_pos_list()[1:])
             pygame.draw.circle(self.game_surface, (255, 255, 0), self.players_dict[player_color].get_head(), 3)
 
             # this portion handles rendering a scoreboard for the player
-            score_text = self.score_font.render(f'{self.name_dict[player_color]}: {self.players_dict[player_color].score}', True, (0, 0, 0),
-                                           (200, 200, 200))
+            score_text = self.score_font.render(f'{self.name_dict[player_color]}:{self.players_dict[player_color].score}',
+                                                True, (0, 0, 0), (200, 200, 200))
             score_Rect = score_text.get_rect()
             score_Rect.center = (700, (SCREEN_SIZE[1] // 6) * (self.players_list.index(player_color) + 1))
             self.screen.blit(score_text, score_Rect)
 
-        # get active powerup from server and render it to screen, if a colision accours activate.
+        # get active powerup from server and render it to screen, if a collision occurs activate.
         powerup_list = json.loads(requests.get(f"{self.host}/activepower").json())
         for powerup, pos in powerup_list:
             self.game_surface.blit(POWER_UPS_IMAGES[powerup], pos)
@@ -174,14 +174,12 @@ class Game_client:
 
         pygame.display.update()
 
-
     def restart(self):
         """reset basic parameters of the game"""
         self.start_pos_dict, self.reverse_dict = json.loads(requests.get(f"{self.host}/reset").json())
         self.lost_players.clear()
         for player in self.players_dict:
             self.players_dict[player].reset(self.start_pos_dict[player])
-
 
     def won(self, player):
         """render winning screen
