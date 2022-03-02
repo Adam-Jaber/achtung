@@ -153,9 +153,10 @@ class Game_client:
                         self.players_dict[player].score += 1     # if a player dies increment others score
 
             pygame.draw.aalines(self.game_surface, self.get_color(player_color), False, self.players_dict[player_color].get_pos_list()[1:])
+            pygame.draw.circle(self.game_surface, (255, 255, 0), self.players_dict[player_color].get_head(), 3)
 
             # this portion handles rendering a scoreboard for the player
-            score_text = self.score_font.render(f'{self.name_dict[player_color]}: {self.players_dict[player_color].score}', True, (255, 255, 255),
+            score_text = self.score_font.render(f'{self.name_dict[player_color]}: {self.players_dict[player_color].score}', True, (0, 0, 0),
                                            (200, 200, 200))
             score_Rect = score_text.get_rect()
             score_Rect.center = (700, (SCREEN_SIZE[1] // 6) * (self.players_list.index(player_color) + 1))
