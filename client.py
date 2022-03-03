@@ -222,7 +222,7 @@ class GameClient:
                     pygame.quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
-                        _thread.start_new_thread(power_ups.get_switch_binds, tuple())
+                        _thread.start_new_thread(power_ups.get_switch_binds, (pygame.K_LEFT, pygame.K_RIGHT))
 
             self.handle_powerups()
 
