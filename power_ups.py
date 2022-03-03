@@ -2,7 +2,7 @@ import time
 import _thread
 import pygame
 import os
-
+import client.pygame
 
 def get_enemy_list(player, players_dict):
     return [enemy for enemy in players_dict.values() if enemy != player]
@@ -32,6 +32,12 @@ def inflict_slow_powerup(*args):
     player, players_dict = args[0], args[1]
     for enemy in get_enemy_list(player, players_dict):
         _thread.start_new_thread(get_slow_powerup, (enemy, ))
+
+
+def get_switch_binds(*args):
+    client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
+    time.sleep(9)
+    client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
 
 
 POWER_UPS_DICT = {'speedself': get_speed_powerup, 'speedrest': inflict_speed_powerup,

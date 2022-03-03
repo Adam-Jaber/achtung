@@ -218,7 +218,6 @@ class GameClient:
                 if event.type == pygame.QUIT:
                     running = False
                     pygame.quit()
-
             self.handle_powerups()
 
             if len(self.lost_players) == 3:
