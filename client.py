@@ -3,6 +3,8 @@ import pygame
 import requests
 import json
 import _thread
+
+import power_ups
 from player import Player
 import achtung_exceptions
 from power_ups import POWER_UPS_DICT, POWER_UPS_IMAGES
@@ -218,6 +220,10 @@ class GameClient:
                 if event.type == pygame.QUIT:
                     running = False
                     pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_1:
+                        _thread.start_new_thread(power_ups.get_switch_binds, tuple())
+
             self.handle_powerups()
 
             if len(self.lost_players) == 3:
