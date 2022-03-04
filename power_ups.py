@@ -35,13 +35,21 @@ def inflict_slow_powerup(*args):
 
 
 def get_switch_binds(*args):
-    client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
-    time.sleep(9)
-    client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
+    if args[0] == args[2]:
+        client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
+        time.sleep(9)
+        client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
+
+def inflict_switch_binds(*args):
+    if args[0] != args[2]:
+        client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
+        time.sleep(9)
+        client.pygame.K_LEFT, client.pygame.K_RIGHT = client.pygame.K_RIGHT, client.pygame.K_LEFT
 
 
 POWER_UPS_DICT = {'speedself': get_speed_powerup, 'speedrest': inflict_speed_powerup,
-                  'slowself': get_slow_powerup, 'slowrest': inflict_slow_powerup}
+                  'slowself': get_slow_powerup, 'slowrest': inflict_slow_powerup,
+                  'rebindself': get_switch_binds, 'rebindrest': inflict_switch_binds}
 
 location = os.path.dirname(__file__)
 POWER_UPS_IMAGES = {powerup: pygame.image.load(f'{location}/{powerup}.png') for powerup in POWER_UPS_DICT}

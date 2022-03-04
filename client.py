@@ -202,7 +202,7 @@ class GameClient:
         """
         power_ups_list = requests.get(f'{self.host}/powerups?player={self.my_player}').json()
         for powerup, user in power_ups_list:
-            _thread.start_new_thread(POWER_UPS_DICT[powerup], (self.players_dict[user], self.players_dict))
+            _thread.start_new_thread(POWER_UPS_DICT[powerup], (self.players_dict[user], self.players_dict, self.my_player))
 
     def use_powerup(self, powerup):
         """post to server using a powerup
