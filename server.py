@@ -8,7 +8,7 @@ import _thread
 
 GAME_SIZE = (600, 600)
 COLORS = ['0,255,0', '255,0,0', '0,0,255', '255,255,0']
-POWER_UPS_LIST = ['speedself', 'speedrest', 'slowself', 'slowrest']
+POWER_UPS_LIST = ['speedself', 'speedrest', 'slowself', 'slowrest', 'rebindself', 'rebindrest']
 
 app = Flask(__name__)
 api = Api(app)
